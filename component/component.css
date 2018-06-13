@@ -1,0 +1,4 @@
+.machine-driver.%%DRIVERNAME%% {
+  background-image: url('zstack.svg');
+  background-size: 90% 90%;
+}

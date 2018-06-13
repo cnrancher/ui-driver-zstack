@@ -1,0 +1,36 @@
+{
+  "name": "ui-driver-zstack",
+  "version": "0.0.2",
+  "description": "ZStack Rancher UI driver for custom docker-machine drivers",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/loganhz/ui-driver-zstack.git"
+  },
+  "author": "Rancher Labs, Inc.",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/rancher/rancher/issues"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/gulp server",
+    "clean": "./node_modules/.bin/gulp clean",
+    "build": "./node_modules/.bin/gulp build",
+    "upload": "./scripts/upload"
+  },
+  "homepage": "https://github.com/loganhz/ui-driver-zstack#readme",
+  "devDependencies": {
+    "del": "3.0.0",
+    "gulp": "3.9.1",
+    "gulp-clean": "0.4.0",
+    "gulp-concat": "2.6.1",
+    "gulp-connect": "5.5.0",
+    "gulp-htmlbars-compiler": "0.0.2",
+    "gulp-jshint": "2.1.0",
+    "gulp-replace": "0.6.1",
+    "gulp-sourcemaps": "2.6.4",
+    "gulp-wrap-amd": "0.5.0",
+    "jshint": "2.9.5",
+    "yargs": "11.0.0",
+    "ember-source": "^3.0.0"
+  }
+}
