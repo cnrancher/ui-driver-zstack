@@ -119,10 +119,12 @@ define('shared/components/node-driver/driver-%%DRIVERNAME%%/component', ['export
 
     actions: {
       zstackLogin: function (cb) {
-        let self = this;
+        let endpoint = (get(this, 'config.endpoint') || '').trim();
+        endpoint = get(this,'app.proxyEndpoint') + '/' + endpoint.replace('//', '/');
+        endpoint = `${location.origin}${endpoint}`;
         setProperties(this, {
           'errors': null,
-          'config.endpoint': (get(this, 'config.endpoint') || '').trim(),
+          'config.endpoint': endpoint,
           'config.accountName': (get(this, 'config.accountName') || '').trim(),
           'config.accountPassword': (get(this, 'config.accountPassword') || '').trim(),
         });
@@ -271,7 +273,7 @@ define('shared/components/node-driver/driver-%%DRIVERNAME%%/component', ['export
         method: 'GET',
         headers: {
           'Accept': 'application/json',
-          'Authorization': `OAuth ${get(this, 'uuid')}`
+          'X-API-Auth-Header': `OAuth ${get(this, 'uuid')}`
         },
       }, true);
     },
