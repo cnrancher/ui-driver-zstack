@@ -30,6 +30,7 @@ define('shared/components/node-driver/driver-%%DRIVERNAME%%/component', ['export
 
     step: 1,
 
+    proxyEndpoint: null,
     zoneChoices: null,
     clusterChoices: null,
     networkChoices: null,
@@ -119,11 +120,12 @@ define('shared/components/node-driver/driver-%%DRIVERNAME%%/component', ['export
 
     actions: {
       zstackLogin: function (cb) {
-        let endpoint = (get(this, 'config.endpoint') || '').trim();
-        endpoint = get(this,'app.proxyEndpoint') + '/' + endpoint.replace('//', '/');
-        endpoint = `${location.origin}${endpoint}`;
+        const endpoint = (get(this, 'config.endpoint') || '').trim();
+        proxyEndpoint = get(this,'app.proxyEndpoint') + '/' + endpoint.replace('//', '/');
+        proxyEndpoint = `${location.origin}${proxyEndpoint}`;
         setProperties(this, {
           'errors': null,
+          'proxyEndpoint': proxyEndpoint,
           'config.endpoint': endpoint,
           'config.accountName': (get(this, 'config.accountName') || '').trim(),
           'config.accountPassword': (get(this, 'config.accountPassword') || '').trim(),
@@ -261,7 +263,7 @@ define('shared/components/node-driver/driver-%%DRIVERNAME%%/component', ['export
     },
 
     sendGet(path) {
-      let url = get(this, 'config.endpoint');
+      let url = get(this, 'proxyEndpoint');
       if (url.endsWith('/')) {
         url += path;
       } else {
@@ -279,7 +281,7 @@ define('shared/components/node-driver/driver-%%DRIVERNAME%%/component', ['export
     },
 
     sendPut(path, params) {
-      let url = get(this, 'config.endpoint');
+      let url = get(this, 'proxyEndpoint');
       if (url.endsWith('/')) {
         url += path;
       } else {
