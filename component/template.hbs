@@ -1,228 +1,230 @@
-{{#accordion-list showExpandAll=false as | al expandFn |}}
-  <div class="over-hr"><span>{{driverOptionsTitle}}</span></div>
+<section class="horizontal-form">
+  {{#accordion-list showExpandAll=false as | al expandFn |}}
+    <div class="over-hr"><span>{{driverOptionsTitle}}</span></div>
 
-  {{#accordion-list-item
-    title=(t 'nodeDriver.zstack.access.title')
-    detail=(t 'nodeDriver.zstack.access.detail')
-    expandAll=expandAll
-    expand=(action expandFn)
-    expandOnInit=true
-  }}
-    <div class="row">
-      <div class="col span-4">
-        <label class="acc-label">{{t 'nodeDriver.zstack.endpoint.label'}}</label>
-        {{#if (eq step 1)}}
-          {{input type="text" classNames="form-control" placeholder=(t 'nodeDriver.zstack.endpoint.placeholder') value=config.endpoint}}
-        {{else}}
-          <div>{{config.endpoint}}</div>
-        {{/if}}
-      </div>
-
-      <div class="col span-4">
-        <label class="acc-label">{{t 'nodeDriver.zstack.accountName.label'}}</label>
-        {{#if (eq step 1)}}
-          {{input type="text" name="username" classNames="form-control" placeholder=(t 'nodeDriver.zstack.accountName.placeholder') value=config.accountName}}
-        {{else}}
-          <div>{{config.accountName}}</div>
-        {{/if}}
-      </div>
-
-      <div class="col span-4">
-        <label class="acc-label">{{t 'nodeDriver.zstack.accountPassword.label'}}</label>
-        {{#if (eq step 1)}}
-          {{input type="password" name="password" classNames="form-control" placeholder=(t 'nodeDriver.zstack.accountPassword.placeholder') value=config.accountPassword}}
-        {{else}}
-          <div class="text-muted text-italic">{{t 'nodeDriver.zstack.accountPassword.provided'}}</div>
-        {{/if}}
-      </div>
-    </div>
-  {{/accordion-list-item}}
-
-  {{#if (eq step 1)}}
-    {{top-errors errors=errors}}
-    {{save-cancel
-      save="zstackLogin"
-      cancel="cancel"
-      createLabel="nodeDriver.zstack.access.next"
-      savingLabel="nodeDriver.zstack.access.loading"
-    }}
-  {{/if}}
-
-  <div class="{{unless (gte step 2) 'hide'}}">
     {{#accordion-list-item
-      title=(t 'nodeDriver.zstack.zone.title')
-      detail=(t 'nodeDriver.zstack.zone.detail')
+      title=(t 'nodeDriver.zstack.access.title')
+      detail=(t 'nodeDriver.zstack.access.detail')
       expandAll=expandAll
       expand=(action expandFn)
       expandOnInit=true
     }}
-      {{#if (eq step 2)}}
-        <div class="row mb-20">
-          <label class="acc-label">{{t 'nodeDriver.zstack.zone.label'}}</label>
-          <select class="form-control" onchange={{action (mut config.zoneName) value="target.value"}}>
-            {{#each zoneChoices as |choice|}}
-              <option value={{choice.uuid}} selected={{eq config.zoneName choice.uuid}}>{{choice.name}}</option>
-            {{/each}}
-          </select>
+      <div class="row">
+        <div class="col span-4">
+          <label class="acc-label">{{t 'nodeDriver.zstack.endpoint.label'}}</label>
+          {{#if (eq step 1)}}
+            {{input type="text" classNames="form-control" placeholder=(t 'nodeDriver.zstack.endpoint.placeholder') value=config.endpoint}}
+          {{else}}
+            <div>{{config.endpoint}}</div>
+          {{/if}}
         </div>
 
-        <div class="row mb-20">
-          <label class="acc-label">{{t 'nodeDriver.zstack.cluster.label'}}</label>
-          <select class="form-control" onchange={{action (mut config.clusterName) value="target.value"}}>
-            {{#each clusterChoices as |choice|}}
-              <option value={{choice.uuid}} selected={{eq config.clusterName choice.uuid}}>{{choice.name}}</option>
-            {{/each}}
-          </select>
+        <div class="col span-4">
+          <label class="acc-label">{{t 'nodeDriver.zstack.accountName.label'}}</label>
+          {{#if (eq step 1)}}
+            {{input type="text" name="username" classNames="form-control" placeholder=(t 'nodeDriver.zstack.accountName.placeholder') value=config.accountName}}
+          {{else}}
+            <div>{{config.accountName}}</div>
+          {{/if}}
         </div>
 
-
-        <div class="row">
-          <label class="acc-label">{{t 'nodeDriver.zstack.network.label'}}</label>
-          <select class="form-control" multiple="true" onchange={{action 'modifyNetworks'}}>
-            {{#each networkChoices as |choice|}}
-              <option value={{choice.uuid}} selected={{array-includes selectedNetworks choice.uuid}}>{{choice.name}}</option>
-            {{/each}}
-          </select>
+        <div class="col span-4">
+          <label class="acc-label">{{t 'nodeDriver.zstack.accountPassword.label'}}</label>
+          {{#if (eq step 1)}}
+            {{input type="password" name="password" classNames="form-control" placeholder=(t 'nodeDriver.zstack.accountPassword.placeholder') value=config.accountPassword}}
+          {{else}}
+            <div class="text-muted text-italic">{{t 'nodeDriver.zstack.accountPassword.provided'}}</div>
+          {{/if}}
         </div>
-      {{else}}
-        <div class="row">
-          <div class="col span-4">
-            <label class="acc-label">{{t 'nodeDriver.zstack.zone.label'}}</label>
-            <div>
-              {{selectedZone}}
-            </div>
-          </div>
-          <div class="col span-4">
-            <label class="acc-label">{{t 'nodeDriver.zstack.cluster.label'}}</label>
-            <div>
-              {{selectedCluster}}
-            </div>
-          </div>
-          <div class="col span-4">
-            <label class="acc-label">{{t 'nodeDriver.zstack.network.label'}}</label>
-            {{#each selectedNetwork as |network|}}
-              <div>
-                {{network.name}}
-              </div>
-            {{/each}}
-          </div>
-        </div>
-      {{/if}}
+      </div>
     {{/accordion-list-item}}
 
-    {{#if (eq step 2)}}
+    {{#if (eq step 1)}}
       {{top-errors errors=errors}}
       {{save-cancel
-        save="selectNetwork"
+        save="zstackLogin"
         cancel="cancel"
-        createLabel="nodeDriver.zstack.zone.next"
-        savingLabel="nodeDriver.zstack.zone.loading"
+        createLabel="nodeDriver.zstack.access.next"
+        savingLabel="nodeDriver.zstack.access.loading"
       }}
     {{/if}}
-  </div>
+
+    <div class="{{unless (gte step 2) 'hide'}}">
+      {{#accordion-list-item
+        title=(t 'nodeDriver.zstack.zone.title')
+        detail=(t 'nodeDriver.zstack.zone.detail')
+        expandAll=expandAll
+        expand=(action expandFn)
+        expandOnInit=true
+      }}
+        {{#if (eq step 2)}}
+          <div class="row mb-20">
+            <label class="acc-label">{{t 'nodeDriver.zstack.zone.label'}}</label>
+            <select class="form-control" onchange={{action (mut config.zoneName) value="target.value"}}>
+              {{#each zoneChoices as |choice|}}
+                <option value={{choice.uuid}} selected={{eq config.zoneName choice.uuid}}>{{choice.name}}</option>
+              {{/each}}
+            </select>
+          </div>
+
+          <div class="row mb-20">
+            <label class="acc-label">{{t 'nodeDriver.zstack.cluster.label'}}</label>
+            <select class="form-control" onchange={{action (mut config.clusterName) value="target.value"}}>
+              {{#each clusterChoices as |choice|}}
+                <option value={{choice.uuid}} selected={{eq config.clusterName choice.uuid}}>{{choice.name}}</option>
+              {{/each}}
+            </select>
+          </div>
 
 
-  <div class="{{unless (gte step 3) 'hide'}}">
-    {{#accordion-list-item
-      title=(t 'nodeDriver.zstack.instance.title')
-      detail=(t 'nodeDriver.zstack.instance.detail')
-      expandAll=expandAll
-      expand=(action expandFn)
-      expandOnInit=true
-    }}
-      <div class="row">
-        <div class="col span-6">
-          <label class="acc-label">{{t 'nodeDriver.zstack.instanceOffering.label'}}</label>
-          {{new-select
-            classNames="form-control"
-            value=config.instanceOffering
-            content=instanceTypes
-          }}
-        </div>
-        <div class="col span-6">
-          <label class="acc-label">{{t 'nodeDriver.zstack.imageName.label'}}</label>
-          {{new-select
-            classNames="form-control"
-            value=config.imageName
-            content=imageTypes
-          }}
-        </div>
-      </div>
-      
-      <div class="row">
-        <div class="col span-6">
-          <label class="acc-label">Physical Host</label>          
-          {{new-select
+          <div class="row">
+            <label class="acc-label">{{t 'nodeDriver.zstack.network.label'}}</label>
+            <select class="form-control" multiple="true" onchange={{action 'modifyNetworks'}}>
+              {{#each networkChoices as |choice|}}
+                <option value={{choice.uuid}} selected={{array-includes selectedNetworks choice.uuid}}>{{choice.name}}</option>
+              {{/each}}
+            </select>
+          </div>
+        {{else}}
+          <div class="row">
+            <div class="col span-4">
+              <label class="acc-label">{{t 'nodeDriver.zstack.zone.label'}}</label>
+              <div>
+                {{selectedZone}}
+              </div>
+            </div>
+            <div class="col span-4">
+              <label class="acc-label">{{t 'nodeDriver.zstack.cluster.label'}}</label>
+              <div>
+                {{selectedCluster}}
+              </div>
+            </div>
+            <div class="col span-4">
+              <label class="acc-label">{{t 'nodeDriver.zstack.network.label'}}</label>
+              {{#each selectedNetwork as |network|}}
+                <div>
+                  {{network.name}}
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        {{/if}}
+      {{/accordion-list-item}}
+
+      {{#if (eq step 2)}}
+        {{top-errors errors=errors}}
+        {{save-cancel
+          save="selectNetwork"
+          cancel="cancel"
+          createLabel="nodeDriver.zstack.zone.next"
+          savingLabel="nodeDriver.zstack.zone.loading"
+        }}
+      {{/if}}
+    </div>
+
+
+    <div class="{{unless (gte step 3) 'hide'}}">
+      {{#accordion-list-item
+        title=(t 'nodeDriver.zstack.instance.title')
+        detail=(t 'nodeDriver.zstack.instance.detail')
+        expandAll=expandAll
+        expand=(action expandFn)
+        expandOnInit=true
+      }}
+        <div class="row">
+          <div class="col span-6">
+            <label class="acc-label">{{t 'nodeDriver.zstack.instanceOffering.label'}}</label>
+            {{new-select
               classNames="form-control"
-              value=config.physicalHost
-              prompt="Select a Physical Host"
-              content=physicalHosts
+              value=config.instanceOffering
+              content=instanceTypes
             }}
+          </div>
+          <div class="col span-6">
+            <label class="acc-label">{{t 'nodeDriver.zstack.imageName.label'}}</label>
+            {{new-select
+              classNames="form-control"
+              value=config.imageName
+              content=imageTypes
+            }}
+          </div>
         </div>
-        <div class="col span-6">
-          <label class="acc-label">Primary Storage</label>
-          {{new-select
-            classNames="form-control"
-            value=config.primaryStorage
-            prompt="Select a Primary Storage"
-            content=primaryStorages
-          }}
+
+        <div class="row">
+          <div class="col span-6">
+            <label class="acc-label">Physical Host</label>
+            {{new-select
+                classNames="form-control"
+                value=config.physicalHost
+                prompt="Select a Physical Host"
+                content=physicalHosts
+              }}
+          </div>
+          <div class="col span-6">
+            <label class="acc-label">Primary Storage</label>
+            {{new-select
+              classNames="form-control"
+              value=config.primaryStorage
+              prompt="Select a Primary Storage"
+              content=primaryStorages
+            }}
+          </div>
         </div>
-      </div>
 
-      <div class="row">
-        <div class="col span-6">
-          <label class="acc-label">{{t 'nodeDriver.zstack.systemDiskOffering.label'}}</label>
-          {{new-select
-            classNames="form-control"
-            value=config.systemDiskOffering
-            prompt="Select a System Disk"
-            content=systemDiskTypes
-          }}
+        <div class="row">
+          <div class="col span-6">
+            <label class="acc-label">{{t 'nodeDriver.zstack.systemDiskOffering.label'}}</label>
+            {{new-select
+              classNames="form-control"
+              value=config.systemDiskOffering
+              prompt="Select a System Disk"
+              content=systemDiskTypes
+            }}
+          </div>
+          <div class="col span-6">
+            <label class="acc-label">Data Disk</label>
+            <select class="form-control" multiple="true" onchange={{action 'modifyDataDisks'}}>
+              {{#each dataDiskTypes as |choice|}}
+                <option value={{choice.uuid}} selected={{array-includes selectedDataDiskOffering choice.uuid}}>{{choice.name}}</option>
+              {{/each}}
+            </select>
+          </div>
         </div>
-        <div class="col span-6">
-          <label class="acc-label">Data Disk</label>
-          <select class="form-control" multiple="true" onchange={{action 'modifyDataDisks'}}>
-            {{#each dataDiskTypes as |choice|}}
-              <option value={{choice.uuid}} selected={{array-includes selectedDataDiskOffering choice.uuid}}>{{choice.name}}</option>
-            {{/each}}
-          </select>
+
+
+        <div class="row">
+          <div class="col span-6">
+            <label class="acc-label">SSH User</label>
+            {{input type="text" name="username" classNames="form-control" placeholder='e.g. root' value=config.sshUser}}
+          </div>
+          <div class="col span-6">
+            <label class="acc-label">SSH Password</label>
+            {{input type="password" name="password" classNames="form-control" placeholder="e.g. password" value=config.sshPassword}}
+          </div>
         </div>
-      </div>
+      {{/accordion-list-item}}
 
+      <div class="over-hr"><span>{{templateOptionsTitle}}</span></div>
 
-      <div class="row">
-        <div class="col span-6">
-          <label class="acc-label">SSH User</label>
-          {{input type="text" name="username" classNames="form-control" placeholder='e.g. root' value=config.sshUser}}
-        </div>
-        <div class="col span-6">
-          <label class="acc-label">SSH Password</label>
-          {{input type="password" name="password" classNames="form-control" placeholder="e.g. password" value=config.sshPassword}}
-        </div>
-      </div>
-    {{/accordion-list-item}}
+      {{form-name-description
+        model=model
+        nameRequired=true
+      }}
 
-    <div class="over-hr"><span>{{templateOptionsTitle}}</span></div>
+      {{form-user-labels
+        initialLabels=labelResource.labels
+        setLabels=(action 'setLabels')
+        expandAll=expandAll
+        expand=(action expandFn)
+      }}
 
-    {{form-name-description
-      model=model
-      nameRequired=true
-    }}
+      {{form-engine-opts
+        machine=model
+        showEngineUrl=showEngineUrl
+      }}
 
-    {{form-user-labels
-      initialLabels=labelResource.labels
-      setLabels=(action 'setLabels')
-      expandAll=expandAll
-      expand=(action expandFn)
-    }}
-
-    {{form-engine-opts
-      machine=model
-      showEngineUrl=showEngineUrl
-    }}
-
-    {{top-errors errors=errors}}
-    {{save-cancel save="save" cancel="cancel"}}
-  </div>
-{{/accordion-list}}
+      {{top-errors errors=errors}}
+      {{save-cancel save="save" cancel="cancel"}}
+    </div>
+  {{/accordion-list}}
+</section>
