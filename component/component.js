@@ -104,8 +104,8 @@ export default Ember.Component.extend(NodeDriver, {
 
   zoneDidChanged: observer('config.zoneName', function () {
     const selectedZone = get(this, 'config.zoneName');
-    Promise.all([this.sendGet(`zstack/v1/clusters?q=zoneUuid=${selectedZone}`)]).then((clusters) => {
-      set(this, 'clusterChoices', JSON.parse(clusters).inventories);
+    Promise.all([this.sendGet(`zstack/v1/clusters?q=zoneUuid=${selectedZone}`)]).then(([clusters]) => {
+      set(this, 'clusterChoices', clusters.inventories);
       set(this, 'config.clusterName', get(this, 'clusterChoices.firstObject.uuid'));
     }, (err) => {
       let errors = get(this, 'errors') || [];
@@ -113,8 +113,8 @@ export default Ember.Component.extend(NodeDriver, {
       set(this, 'errors', errors);
     });
 
-    Promise.all([this.sendGet(`zstack/v1/l3-networks?q=zoneUuid=${selectedZone}`)]).then((networks) => {
-      set(this, 'networkChoices', JSON.parse(networks).inventories);
+    Promise.all([this.sendGet(`zstack/v1/l3-networks?q=zoneUuid=${selectedZone}`)]).then(([networks]) => {
+      set(this, 'networkChoices', networks.inventories);
       set(this, 'selectedNetworks', [get(this, 'networkChoices.firstObject.uuid')]);
     }, (err) => {
       let errors = get(this, 'errors') || [];
@@ -160,10 +160,10 @@ export default Ember.Component.extend(NodeDriver, {
           password: SHA512(get(this, 'config.accountPassword')),
           accountName: get(this, 'config.accountName'),
         },
-      })]).then((auth) => {
+      })]).then(([auth]) => {
         set(this, 'uuid', auth.inventory.uuid);
-        Promise.all([this.sendGet('zstack/v1/zones')]).then((zones) => {
-          set(this, 'zoneChoices', JSON.parse(zones).inventories);
+        Promise.all([this.sendGet('zstack/v1/zones')]).then(([zones]) => {
+          set(this, 'zoneChoices', zones.inventories);
           set(this, 'config.zoneName', get(this, 'zoneChoices.firstObject.uuid'));
           set(this, 'step', 2);
           cb();
@@ -206,8 +206,8 @@ export default Ember.Component.extend(NodeDriver, {
     },
 
     selectNetwork: function (cb) {
-      const instancePromise = Promise.all([this.sendGet('zstack/v1/instance-offerings')]).then((instanceTypes) => {
-        set(this, 'instanceTypes', JSON.parse(instanceTypes).inventories.map(type => {
+      const instancePromise = Promise.all([this.sendGet('zstack/v1/instance-offerings')]).then(([instanceTypes]) => {
+        set(this, 'instanceTypes', instanceTypes.inventories.map(type => {
           return {
             value: type.uuid,
             label: `${type.name} ( CPU ${type.cpuNum} Memory ${formatSi(type.memorySize, 1024, 'B', 'B')} )`
@@ -220,8 +220,8 @@ export default Ember.Component.extend(NodeDriver, {
         set(this, 'errors', errors);
       });
 
-      const imagePromise = Promise.all([this.sendGet('zstack/v1/images')]).then((imageTypes) => {
-        set(this, 'imageTypes', JSON.parse(imageTypes).inventories.map(type => {
+      const imagePromise = Promise.all([this.sendGet('zstack/v1/images')]).then(([imageTypes]) => {
+        set(this, 'imageTypes', imageTypes.inventories.map(type => {
           return {
             value: type.uuid,
             label: type.name
@@ -234,8 +234,8 @@ export default Ember.Component.extend(NodeDriver, {
         set(this, 'errors', errors);
       });
 
-      const primaryStoragePromise = Promise.all([this.sendGet('zstack/v1/primary-storage')]).then((primaryStorages) => {
-        set(this, 'primaryStorages', JSON.parse(primaryStorages).inventories.map(primaryStorage => {
+      const primaryStoragePromise = Promise.all([this.sendGet('zstack/v1/primary-storage')]).then(([primaryStorages]) => {
+        set(this, 'primaryStorages', primaryStorages.inventories.map(primaryStorage => {
           return {
             value: primaryStorage.uuid,
             label: primaryStorage.name
@@ -247,8 +247,8 @@ export default Ember.Component.extend(NodeDriver, {
         set(this, 'errors', errors);
       });
 
-      const physicalHostPromise = Promise.all([this.sendGet('zstack/v1/hosts')]).then((physicalHosts) => {
-        set(this, 'physicalHosts', JSON.parse(physicalHosts).inventories.map(physicalHost => {
+      const physicalHostPromise = Promise.all([this.sendGet('zstack/v1/hosts')]).then(([physicalHosts]) => {
+        set(this, 'physicalHosts', physicalHosts.inventories.map(physicalHost => {
           return {
             value: physicalHost.uuid,
             label: physicalHost.name
@@ -260,14 +260,14 @@ export default Ember.Component.extend(NodeDriver, {
         set(this, 'errors', errors);
       });
 
-      const systemDiskPromise = Promise.all([this.sendGet('zstack/v1/disk-offerings')]).then((systemDiskTypes) => {
-        set(this, 'systemDiskTypes', JSON.parse(systemDiskTypes).inventories.map(type => {
+      const systemDiskPromise = Promise.all([this.sendGet('zstack/v1/disk-offerings')]).then(([systemDiskTypes]) => {
+        set(this, 'systemDiskTypes', systemDiskTypes.inventories.map(type => {
           return {
             value: type.uuid,
             label: type.name,
           }
         }));
-        set(this, 'dataDiskTypes', JSON.parse(systemDiskTypes).inventories.map(type => {
+        set(this, 'dataDiskTypes', systemDiskTypes.inventories.map(type => {
           return {
             uuid: type.uuid,
             name: type.name,
